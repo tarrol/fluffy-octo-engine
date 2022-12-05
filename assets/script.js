@@ -59,17 +59,26 @@ function getWeather() {
       imgMainSrc.setAttribute("src", outputURL);
       todayDate.innerText = dayjs(data.sys.sunrise * 1000).format("M/D/YYYY");
 
-      // fetch(`api.openweathermap.org/data/2.5/forecast?q=${inputLocation}&appid=${weatherApiKey}`)
-      //   .then(function (response) {
-      //     return response.json();
-      //   })
-      //   .then(function (data) {
-      //     for (let i = 0; i < array.length; i++) {
 
-      //     }
-      //   })
+      fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${inputLocation}&appid=${weatherApiKey}&units=imperial`)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          console.log(data);
+          for (let i = 0; i < 5; i++) {
+            document.querySelector(`#tempCard${i + 1}`).innerText = "Temp: " + Math.floor(data.list[i * 8].main.temp) + "F";
+            document.querySelector(`#cardDate${i + 1}`).innerText = dayjs(data.list[i * 8].dt * 1000).format("M/D/YYYY")
+            document.querySelector(`#weatherPic${i + 1}`).setAttribute("src", weatherURL + "/img/w/" + data.list[i * 8].weather[0].icon + ".png");
+            document.querySelector(`#cardText${i + 1}`).innerText = data.list[i * 8].weather[0].description;
+            document.querySelector(`#windCard${i + 1}`).innerText = "Wind Speed: " + data.list[i * 8].wind.speed + "MPH";
+            document.querySelector(`#humidCard${i + 1}`).innerText = "Humidity: " + data.list[i * 8].main.humidity + "%";
+          }
+        })
     });
+
 }
+
 function historyClick(e) {
   if (!e.target.matches(".dropDownOption")) {
     return;
@@ -79,6 +88,7 @@ function historyClick(e) {
     getCoordinates();
   }
 }
+
 function formSubmit(e) {
   if (!searchInput.value) {
     return;
@@ -94,7 +104,7 @@ function formSubmit(e) {
     newA.innerText = searchInput.value;
     newLi.append(newA);
     dropDownTarget.append(newLi);
-    localHistory.push(searchInput.value)
+    localHistory.push(searchInput.value);
     localStorage.setItem("previous-searches", JSON.stringify(localHistory));
   }
   e.preventDefault();
@@ -119,13 +129,12 @@ function refreshPreviousSearches() {
 }
 
 function checkSearchHistory() {
-  var previousSearches = localStorage.getItem('previous-searches');
+  var previousSearches = localStorage.getItem("previous-searches");
   if (previousSearches) {
     localHistory = JSON.parse(previousSearches);
   }
   refreshPreviousSearches();
 }
-
 
 checkSearchHistory();
 searchForm.addEventListener("submit", formSubmit);
