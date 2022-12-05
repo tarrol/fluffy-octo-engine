@@ -4,7 +4,7 @@
 
 Web-page with API-keys and local storage to offer a 5 day forecast.
 
-Deployed page link: https://tarrol.github.io/super-octo-memory/
+Deployed page link: https://tarrol.github.io/fluffy-octo-engine/
 
 ## Screenshot
 ![Screenshot of the Weather App](/assets/images/screenshot.png?raw=true "Weather App")
